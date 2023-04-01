@@ -1,0 +1,31 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="addRoles" author="Ahmed.Baz" labels="credential-service">
+        <sql>
+            INSERT INTO APP_ROLE (ID, CODE, "NAME", CREATED_BY, CREATED_DATE, LAST_MODIFIED_BY,
+                                  LAST_MODIFIED_DATE)
+            VALUES (NEXT VALUE FOR ROLE_SEQ, 'ADMIN', 'Admin', 'system', CURRENT_DATE(),
+                         'system', CURRENT_DATE());
+
+            INSERT INTO APP_ROLE (ID, CODE, "NAME", CREATED_BY, CREATED_DATE, LAST_MODIFIED_BY,
+                                  LAST_MODIFIED_DATE)
+            VALUES (NEXT VALUE FOR ROLE_SEQ, 'MAKER', 'Maker', 'system', CURRENT_DATE (),
+                         'system', CURRENT_DATE ());
+
+            INSERT INTO APP_ROLE (ID, CODE, "NAME", CREATED_BY, CREATED_DATE, LAST_MODIFIED_BY,
+                                  LAST_MODIFIED_DATE)
+            VALUES (NEXT VALUE FOR ROLE_SEQ, 'CHECKER', 'Checker', 'system', CURRENT_DATE(),
+                         'system', CURRENT_DATE());
+
+            INSERT INTO APP_ROLE (ID, CODE, "NAME", CREATED_BY, CREATED_DATE, LAST_MODIFIED_BY,
+                                  LAST_MODIFIED_DATE)
+            VALUES (NEXT VALUE FOR ROLE_SEQ, 'USER', 'User', 'system', CURRENT_DATE(),
+                         'system', CURRENT_DATE())
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

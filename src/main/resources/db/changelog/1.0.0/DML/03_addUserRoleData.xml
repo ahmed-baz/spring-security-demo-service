@@ -1,0 +1,19 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="addUserRoles" author="Ahmed.Baz" labels="credential-service">
+        <sql>
+            INSERT INTO USER_ROLE (ID, USER_ID, ROLE_ID)
+            VALUES (NEXT VALUE FOR USER_ROLE_SEQ, (SELECT ID FROM APP_USER WHERE USER_NAME = 'ahmed.baz@fawry.com'),
+                         (SELECT ID FROM APP_ROLE WHERE CODE = 'ADMIN'));
+            INSERT INTO USER_ROLE (ID, USER_ID, ROLE_ID)
+            VALUES (NEXT VALUE FOR USER_ROLE_SEQ, (SELECT ID FROM APP_USER WHERE USER_NAME = 'ahmed.ali@fawry.com'),
+                         (SELECT ID FROM APP_ROLE WHERE CODE = 'USER'))
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

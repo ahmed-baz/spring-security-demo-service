@@ -1,0 +1,29 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="createUserRole" author="Ahmed.Baz" labels="credential-service">
+        <sql>
+            CREATE TABLE USER_ROLE
+            (
+                ID      NUMBER(10) NOT NULL,
+                USER_ID VARCHAR2(200) NOT NULL,
+                ROLE_ID VARCHAR2 NOT NULL,
+                PRIMARY KEY (ID),
+                FOREIGN KEY (USER_ID) REFERENCES APP_USER (ID),
+                FOREIGN KEY (ROLE_ID) REFERENCES APP_ROLE (ID)
+            );
+
+        </sql>
+        <sql>
+            CREATE SEQUENCE USER_ROLE_SEQ
+                MINVALUE 1
+                MAXVALUE 999999999
+                INCREMENT BY 1
+                START WITH 1 NOCACHE NOCYCLE;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

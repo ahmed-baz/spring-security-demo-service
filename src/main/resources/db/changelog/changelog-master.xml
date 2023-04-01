@@ -1,0 +1,16 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="1.0.0/DDL/01_createAppRole.xml" relativeToChangelogFile="true"/>
+    <include file="1.0.0/DDL/02_createAppUser.xml" relativeToChangelogFile="true"/>
+    <include file="1.0.0/DDL/03_createUserRole.xml" relativeToChangelogFile="true"/>
+    <include file="1.0.0/DDL/04_CreateTokenInfo.xml" relativeToChangelogFile="true"/>
+    <include file="1.0.0/DDL/05_CreateUserOTP.xml" relativeToChangelogFile="true"/>
+    <include file="1.0.0/DML/01_addAppRoles.xml" relativeToChangelogFile="true"/>
+    <include file="1.0.0/DML/02_addUsers.xml" relativeToChangelogFile="true"/>
+    <include file="1.0.0/DML/03_addUserRoleData.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

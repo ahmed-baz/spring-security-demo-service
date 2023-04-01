@@ -1,0 +1,27 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="addUsers" author="Ahmed.Baz" labels="credential-service">
+        <sql>
+            INSERT INTO APP_USER (ID, FIRST_NAME, LAST_NAME, EMAIL, USER_NAME, PASSWORD, CREATED_BY,
+                                  CREATED_DATE,
+                                  LAST_MODIFIED_BY,
+                                  LAST_MODIFIED_DATE)
+            VALUES (NEXT VALUE FOR APP_USER_SEQ, 'Ahmed', 'Baz', 'ahmed.baz@fawry.com', 'ahmed.baz@fawry.com',
+                         '$2a$10$hxN5J./k7TvkFtXsWj62tuxvkCZKpxTNGHX2PVennT9xFHbxW.pSG', 'system', CURRENT_DATE(),
+                         'system', CURRENT_DATE());
+            INSERT
+            INTO APP_USER (ID, FIRST_NAME, LAST_NAME, EMAIL, USER_NAME, PASSWORD, CREATED_BY,
+                           CREATED_DATE,
+                           LAST_MODIFIED_BY,
+                           LAST_MODIFIED_DATE)
+            VALUES (NEXT VALUE FOR APP_USER_SEQ, 'Ahmed', 'Ali', 'ahmed.ali@fawry.com', 'ahmed.ali@fawry.com',
+                         '$2a$10$hxN5J./k7TvkFtXsWj62tuxvkCZKpxTNGHX2PVennT9xFHbxW.pSG', 'system', CURRENT_DATE (),
+                         'system', CURRENT_DATE ())
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
