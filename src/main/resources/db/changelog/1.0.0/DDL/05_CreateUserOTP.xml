@@ -15,7 +15,6 @@
                 IS_DAMAGED          NUMBER(1) default 0,
                 IS_EXPIRED          NUMBER(1) default 0,
                 IS_CONSUMED         NUMBER(1) default 0,
-                USER_ID             NUMBER(10) NOT NULL,
                 EXPIRATION_DATE     DATE,
                 CREATED_BY          VARCHAR2(255),
                 CREATED_DATE        DATE,
@@ -23,8 +22,7 @@
                 LAST_MODIFIED_BY_ID NUMBER(10),
                 LAST_MODIFIED_DATE  DATE,
                 LAST_MODIFIED_BY    VARCHAR2(255),
-                PRIMARY KEY (ID),
-                FOREIGN KEY (USER_ID) REFERENCES APP_USER (ID)
+                PRIMARY KEY (ID)
             );
 
         </sql>

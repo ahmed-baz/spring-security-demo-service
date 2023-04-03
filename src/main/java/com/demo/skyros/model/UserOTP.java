@@ -38,9 +38,6 @@ public class UserOTP extends BaseEntity {
     private boolean isConsumed;
     @Column(name = "EXPIRATION_DATE")
     private Date expirationDate;
-    @ManyToOne
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-    private AppUser appUser;
 
 }
 

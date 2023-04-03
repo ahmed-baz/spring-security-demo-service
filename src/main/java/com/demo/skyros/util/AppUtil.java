@@ -1,6 +1,5 @@
 package com.demo.skyros.util;
 
-import com.demo.skyros.model.AppUser;
 import com.demo.skyros.model.EntityAudit;
 import com.demo.skyros.model.UserOTP;
 import com.demo.skyros.repo.UserOTPRepo;
@@ -8,7 +7,6 @@ import com.demo.skyros.security.vo.OTPTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -24,12 +22,11 @@ public class AppUtil {
     @Autowired
     private UserOTPRepo userOTPRepo;
 
-    public String generateUserOTP(String userName, Long userId, OTPTypeEnum otpTypeEnum) {
+    public String generateUserOTP(String userName, OTPTypeEnum otpTypeEnum) {
         String otp = new DecimalFormat("000000").format(new Random().nextInt(999999));
         UserOTP userOTP = new UserOTP();
         userOTP.setOtpValue(otp);
         userOTP.setOtpTypeEnum(otpTypeEnum);
-        userOTP.setAppUser(new AppUser(userId));
         userOTP.setUserName(userName);
         userOTP.setExpired(false);
         userOTP.setDamaged(false);
