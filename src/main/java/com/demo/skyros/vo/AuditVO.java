@@ -4,12 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
 @Setter
 @Getter
-public class AuditVO {
+public class AuditVO implements Serializable {
 
     @DateTimeFormat(pattern = "dd-M-yyyy hh:mm:ss")
     private Date createdDate;

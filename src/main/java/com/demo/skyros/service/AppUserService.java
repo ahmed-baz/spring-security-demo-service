@@ -2,6 +2,7 @@ package com.demo.skyros.service;
 
 
 import com.demo.skyros.exception.AppResponse;
+import com.demo.skyros.exception.NoneUniqueResultException;
 import com.demo.skyros.exception.UserNotFoundException;
 import com.demo.skyros.mapper.AppUserMapper;
 import com.demo.skyros.model.AppUser;
@@ -12,6 +13,8 @@ import com.demo.skyros.repo.AppUserRepo;
 import com.demo.skyros.repo.UserRoleRepo;
 import com.demo.skyros.vo.AppUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,7 +53,7 @@ public class AppUserService {
         appUser.setAudit(prepareSessionAudit());
 
         //5. save user
-        AppUser savedUser = getUserRepo().save(appUser);
+        AppUser savedUser = saveUser(appUser);
 
         //6. save user roles
         saveUserRoles(savedUser, roles);
@@ -82,6 +85,17 @@ public class AppUserService {
             });
         }
         getUserRoleRepo().saveAll(userRoles);
+    }
+
+    public AppUser saveUser(AppUser user) {
+        try {
+            user.setEmail(user.getEmail().toLowerCase(Locale.ROOT));
+            return getUserRepo().save(user);
+        } catch (DataIntegrityViolationException ex) {
+            throw new NoneUniqueResultException("email");
+        } catch (Exception ex) {
+            throw ex;
+        }
     }
 
     private EntityAudit prepareSessionAudit() {
@@ -117,6 +131,7 @@ public class AppUserService {
         return prepareAppResponse(userVO, null);
     }
 
+    @Cacheable(value = "findUserById", key = "#id")
     public AppResponse findUserById(Long id) {
         AppUser appUser = getUserRepo().findById(id).orElse(null);
         if (null == appUser) {
@@ -135,7 +150,7 @@ public class AppUserService {
         return prepareAppResponse(null, "user deleted");
     }
 
-    //@Cacheable(value = "findUserByEmailOrUserName", key = "#key")
+    @Cacheable(value = "findUserByEmailOrUserName", key = "#key")
     public AppResponse findByEmailOrUserName(String key) {
         AppUser appUser = getUserRepo().findByEmailOrUserName(key, key);
         if (null == appUser) {

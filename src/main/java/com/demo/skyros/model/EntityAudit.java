@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -18,7 +19,7 @@ import java.util.Date;
 @Getter
 @ToString
 @Embeddable
-public class EntityAudit {
+public class EntityAudit implements Serializable {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

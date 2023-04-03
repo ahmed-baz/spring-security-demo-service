@@ -3,7 +3,6 @@ package com.demo.skyros.security.service;
 
 import com.demo.skyros.exception.AppResponse;
 import com.demo.skyros.exception.TokenExpiredException;
-import com.demo.skyros.exception.TokenNotFoundException;
 import com.demo.skyros.mapper.AppUserMapper;
 import com.demo.skyros.model.AppUser;
 import com.demo.skyros.model.EntityAudit;
@@ -24,6 +23,7 @@ import com.demo.skyros.vo.RoleVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -72,6 +72,7 @@ public class AuthService implements UserDetailsService {
     @Autowired
     private AppUtil appUtil;
 
+    @Cacheable(value = "loadUserByUsername", key = "#username")
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppResponse appResponse = getAppUserService().findByEmailOrUserName(username);
@@ -113,7 +114,7 @@ public class AuthService implements UserDetailsService {
         appUser.setAudit(prepareSessionAudit());
 
         //5. save user
-        AppUser savedUser = getUserRepo().save(appUser);
+        AppUser savedUser = getAppUserService().saveUser(appUser);
 
         //6. save user roles
         Set<Role> roles = new HashSet<>();
@@ -169,10 +170,10 @@ public class AuthService implements UserDetailsService {
         tokenInfo.setLocalIpAddress(hostAddress);
         tokenInfo.setRemoteIpAddress(httpRequest.getRemoteAddr());
         tokenInfo.setAudit(prepareSessionAudit());
-        TokenInfo savedTokenInfo = getTokenInfoRepo().save(tokenInfo);
+        //TokenInfo savedTokenInfo = getTokenInfoRepo().save(tokenInfo);
         TokenVO responseVO = new TokenVO();
-        responseVO.setAccessToken(savedTokenInfo.getAccessToken());
-        responseVO.setRefreshToken(savedTokenInfo.getRefreshToken());
+        responseVO.setAccessToken(tokenInfo.getAccessToken());
+        responseVO.setRefreshToken(tokenInfo.getRefreshToken());
         responseVO.setUserName(userName);
         return responseVO;
     }
@@ -187,16 +188,19 @@ public class AuthService implements UserDetailsService {
             throw new TokenExpiredException("refresh");
         }
         String userName = getJwtTokenUtil().getUserNameFromToken(refreshToken);
-        TokenInfo tokenInfo = getTokenInfoRepo().findByRefreshToken(refreshToken);
+        /*
+         TokenInfo tokenInfo = getTokenInfoRepo().findByRefreshToken(refreshToken);
 
-        if (null == tokenInfo) {
-            throw new TokenNotFoundException();
-        }
+         if (null == tokenInfo) {
+             throw new TokenNotFoundException();
+         }
+        */
+
         String accessToken = getJwtTokenUtil().generateToken(userName, UUID.randomUUID().toString(), false);
 
-        tokenInfo.setAccessToken(accessToken);
-        tokenInfo.setAudit(prepareSessionAudit());
-        getTokenInfoRepo().save(tokenInfo);
+        //tokenInfo.setAccessToken(accessToken);
+        //tokenInfo.setAudit(prepareSessionAudit());
+        //getTokenInfoRepo().save(tokenInfo);
 
         TokenVO responseVO = new TokenVO(userName, accessToken, refreshToken);
         return responseVO;

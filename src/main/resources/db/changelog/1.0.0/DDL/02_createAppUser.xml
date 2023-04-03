@@ -10,8 +10,8 @@
             (
                 ID                         NUMBER(10) NOT NULL,
                 FIRST_NAME                 VARCHAR2(200) NOT NULL,
-                LAST_NAME                  CLOB,
-                EMAIL                      VARCHAR2(255),
+                LAST_NAME                  VARCHAR2(200),
+                EMAIL                      VARCHAR2(255) NOT NULL,
                 USER_NAME                  VARCHAR2(255),
                 PASSWORD                   VARCHAR2(255),
                 IS_ENABLED                 NUMBER(1) DEFAULT 1,
@@ -24,9 +24,10 @@
                 LAST_MODIFIED_BY_ID        NUMBER(10),
                 LAST_MODIFIED_DATE         DATE,
                 LAST_MODIFIED_BY           VARCHAR2(255),
-                PRIMARY KEY (ID)
+                PRIMARY KEY (ID),
+                CONSTRAINT EMAIL_UK UNIQUE (EMAIL),
+                CONSTRAINT USER_NAME_UK UNIQUE (USER_NAME)
             );
-
         </sql>
         <sql>
             CREATE SEQUENCE APP_USER_SEQ

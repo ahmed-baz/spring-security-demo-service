@@ -2,9 +2,10 @@ package com.demo.skyros.exception;
 
 import org.springframework.http.HttpStatus;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AppResponse {
+public class AppResponse implements Serializable {
     private Date responseDate;
     private HttpStatus httpStatus;
     private String message;

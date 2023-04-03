@@ -9,6 +9,7 @@ import com.demo.skyros.model.Role;
 import com.demo.skyros.repo.AppRoleRepo;
 import com.demo.skyros.vo.RoleVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -85,6 +86,7 @@ public class AppRoleService {
         return prepareAppResponse(roleVO, null);
     }
 
+    @Cacheable(value = "getUserRole")
     public Role getUserRole() {
         Role role = getAppRoleRepo().findByCode("USER");
         return role;

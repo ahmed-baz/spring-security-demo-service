@@ -38,6 +38,13 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
         return responseEntity;
     }
 
+    @ExceptionHandler(NoneUniqueResultException.class)
+    public ResponseEntity<Object> handleNoneUniqueResultException(NoneUniqueResultException ex, WebRequest request) {
+        AppResponse appResponse = new AppResponse(new Date(), HttpStatus.CONFLICT, ex.getMessage(), request.getDescription(false));
+        ResponseEntity responseEntity = new ResponseEntity(appResponse, HttpStatus.CONFLICT);
+        return responseEntity;
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         AppResponse appResponse = new AppResponse(new Date(), HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getBindingResult().getFieldError().getDefaultMessage());
