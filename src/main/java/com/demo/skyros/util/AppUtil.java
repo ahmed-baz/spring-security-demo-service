@@ -3,7 +3,7 @@ package com.demo.skyros.util;
 import com.demo.skyros.model.EntityAudit;
 import com.demo.skyros.model.UserOTP;
 import com.demo.skyros.repo.UserOTPRepo;
-import com.demo.skyros.security.vo.OTPTypeEnum;
+import com.demo.skyros.security.vo.enums.OTPTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

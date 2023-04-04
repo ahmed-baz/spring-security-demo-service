@@ -14,7 +14,6 @@ import com.demo.skyros.security.model.TokenInfo;
 import com.demo.skyros.security.repo.TokenInfoRepo;
 import com.demo.skyros.security.vo.AppUserDetails;
 import com.demo.skyros.security.vo.LoginRequestVO;
-import com.demo.skyros.security.vo.OTPTypeEnum;
 import com.demo.skyros.security.vo.TokenVO;
 import com.demo.skyros.service.AppRoleService;
 import com.demo.skyros.service.AppUserService;

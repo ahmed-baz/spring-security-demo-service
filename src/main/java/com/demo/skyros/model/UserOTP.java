@@ -1,6 +1,6 @@
 package com.demo.skyros.model;
 
-import com.demo.skyros.security.vo.OTPTypeEnum;
+import com.demo.skyros.security.vo.enums.OTPTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
