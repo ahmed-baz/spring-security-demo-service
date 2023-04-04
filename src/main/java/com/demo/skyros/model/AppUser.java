@@ -1,6 +1,7 @@
 package com.demo.skyros.model;
 
 import com.demo.skyros.security.model.TokenInfo;
+import com.demo.skyros.security.vo.enums.LoginStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,6 +51,9 @@ public class AppUser extends BaseEntity {
     private boolean isAccountNonLocked;
     @Column(name = "IS_ACCOUNT_NON_EXPIRED")
     private boolean isAccountNonExpired;
+    @Column(name = "LOGIN_STATUS")
+    @Enumerated(EnumType.STRING)
+    private LoginStatusEnum loginStatusEnum;
 
     public AppUser(Long id) {
         this.id = id;

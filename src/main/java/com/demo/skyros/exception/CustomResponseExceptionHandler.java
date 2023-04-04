@@ -1,5 +1,8 @@
 package com.demo.skyros.exception;
 
+import com.demo.skyros.security.exception.ForceChangePasswordException;
+import com.demo.skyros.security.exception.OtpRequiredException;
+import com.demo.skyros.security.exception.TokenExpiredException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,20 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
 
     @ExceptionHandler(TokenExpiredException.class)
     public ResponseEntity<Object> handleTokenExpiredException(TokenExpiredException ex, WebRequest request) {
+        AppResponse appResponse = new AppResponse(new Date(), HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getDescription(false));
+        ResponseEntity responseEntity = new ResponseEntity(appResponse, HttpStatus.UNAUTHORIZED);
+        return responseEntity;
+    }
+
+    @ExceptionHandler(OtpRequiredException.class)
+    public ResponseEntity<Object> handleOtpRequiredException(OtpRequiredException ex, WebRequest request) {
+        AppResponse appResponse = new AppResponse(new Date(), HttpStatus.PRECONDITION_REQUIRED, ex.getMessage(), request.getDescription(false));
+        ResponseEntity responseEntity = new ResponseEntity(appResponse, HttpStatus.PRECONDITION_REQUIRED);
+        return responseEntity;
+    }
+
+    @ExceptionHandler(ForceChangePasswordException.class)
+    public ResponseEntity<Object> handleForceChangePasswordException(ForceChangePasswordException ex, WebRequest request) {
         AppResponse appResponse = new AppResponse(new Date(), HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getDescription(false));
         ResponseEntity responseEntity = new ResponseEntity(appResponse, HttpStatus.UNAUTHORIZED);
         return responseEntity;

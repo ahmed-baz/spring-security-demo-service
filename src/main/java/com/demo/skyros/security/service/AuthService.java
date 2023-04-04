@@ -2,7 +2,6 @@ package com.demo.skyros.security.service;
 
 
 import com.demo.skyros.exception.AppResponse;
-import com.demo.skyros.exception.TokenExpiredException;
 import com.demo.skyros.mapper.AppUserMapper;
 import com.demo.skyros.model.AppUser;
 import com.demo.skyros.model.EntityAudit;
@@ -10,11 +9,15 @@ import com.demo.skyros.model.Role;
 import com.demo.skyros.model.UserRole;
 import com.demo.skyros.repo.AppUserRepo;
 import com.demo.skyros.repo.UserRoleRepo;
+import com.demo.skyros.security.exception.ForceChangePasswordException;
+import com.demo.skyros.security.exception.OtpRequiredException;
+import com.demo.skyros.security.exception.TokenExpiredException;
 import com.demo.skyros.security.model.TokenInfo;
 import com.demo.skyros.security.repo.TokenInfoRepo;
 import com.demo.skyros.security.vo.AppUserDetails;
 import com.demo.skyros.security.vo.LoginRequestVO;
 import com.demo.skyros.security.vo.TokenVO;
+import com.demo.skyros.security.vo.enums.LoginStatusEnum;
 import com.demo.skyros.service.AppRoleService;
 import com.demo.skyros.service.AppUserService;
 import com.demo.skyros.util.AppUtil;
@@ -78,7 +81,6 @@ public class AuthService implements UserDetailsService {
         AppResponse appResponse = getAppUserService().findByEmailOrUserName(username);
         AppUserVO userVO = (AppUserVO) appResponse.getData();
         AppUserDetails appUserDetails = new AppUserDetails(userVO);
-        //User user = new User(userVO.getUserName(), userVO.getPassword(), getUserGrantedAuthority(userVO.getRoles()));
         return appUserDetails;
     }
 
@@ -94,8 +96,18 @@ public class AuthService implements UserDetailsService {
         String userName = requestVO.getUserName();
         Authentication authentication = getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(userName, requestVO.getPassword()));
         AppUserDetails appUserDetails = (AppUserDetails) authentication.getPrincipal();
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        TokenVO responseVO = generateUserTokens(userName, appUserDetails.getId());
+        LoginStatusEnum loginStatusEnum = appUserDetails.getLoginStatusEnum();
+        TokenVO responseVO = new TokenVO();
+        switch (loginStatusEnum) {
+            case ACTIVE:
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                responseVO = generateUserTokens(userName, appUserDetails.getId());
+                break;
+            case PENDING:
+                throw new OtpRequiredException("OTP Required");
+            case FORCE_CHANGE_PASSWORD:
+                throw new ForceChangePasswordException("must change your password");
+        }
         return responseVO;
     }
 
@@ -114,6 +126,7 @@ public class AuthService implements UserDetailsService {
         appUser.setAudit(prepareSessionAudit());
 
         //5. save user
+        getAppUserService().updateUserCredentials(appUser, LoginStatusEnum.PENDING);
         AppUser savedUser = getAppUserService().saveUser(appUser);
 
         //6. save user roles

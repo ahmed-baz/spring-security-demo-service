@@ -11,6 +11,7 @@ import com.demo.skyros.model.Role;
 import com.demo.skyros.model.UserRole;
 import com.demo.skyros.repo.AppUserRepo;
 import com.demo.skyros.repo.UserRoleRepo;
+import com.demo.skyros.security.vo.enums.LoginStatusEnum;
 import com.demo.skyros.vo.AppUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -53,6 +54,7 @@ public class AppUserService {
         appUser.setAudit(prepareSessionAudit());
 
         //5. save user
+        updateUserCredentials(appUser, LoginStatusEnum.FORCE_CHANGE_PASSWORD);
         AppUser savedUser = saveUser(appUser);
 
         //6. save user roles
@@ -85,6 +87,15 @@ public class AppUserService {
             });
         }
         getUserRoleRepo().saveAll(userRoles);
+    }
+
+    public void updateUserCredentials(AppUser appUser, LoginStatusEnum forceChangePassword) {
+        appUser.setLoginStatusEnum(forceChangePassword);
+        appUser.setAccountNonExpired(true);
+        appUser.setAccountNonLocked(true);
+        appUser.setCredentialsNonExpired(true);
+        appUser.setCredentialsNonExpired(true);
+        appUser.setEnabled(true);
     }
 
     public AppUser saveUser(AppUser user) {

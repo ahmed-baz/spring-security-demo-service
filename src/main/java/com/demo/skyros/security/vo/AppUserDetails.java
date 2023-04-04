@@ -1,6 +1,7 @@
 package com.demo.skyros.security.vo;
 
 
+import com.demo.skyros.security.vo.enums.LoginStatusEnum;
 import com.demo.skyros.vo.AppUserVO;
 import com.demo.skyros.vo.RoleVO;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Setter
@@ -19,6 +21,7 @@ public class AppUserDetails implements UserDetails {
     private String userName;
     private String password;
     private Set<RoleVO> roles = new HashSet<>();
+    private LoginStatusEnum loginStatusEnum;
     private boolean isEnabled;
     private boolean isCredentialsNonExpired;
     private boolean isAccountNonLocked;
@@ -26,8 +29,9 @@ public class AppUserDetails implements UserDetails {
 
     public AppUserDetails(AppUserVO appUserVO) {
         this.id = appUserVO.getId();
-        this.userName = appUserVO.getUserName();
+        this.userName = appUserVO.getEmail();
         this.password = appUserVO.getPassword();
+        this.loginStatusEnum = appUserVO.getLoginStatusEnum();
         this.roles = appUserVO.getRoles();
         this.isEnabled = appUserVO.isEnabled();
         this.isCredentialsNonExpired = appUserVO.isCredentialsNonExpired();

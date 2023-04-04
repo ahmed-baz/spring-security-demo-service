@@ -1,5 +1,6 @@
 package com.demo.skyros.vo;
 
+import com.demo.skyros.security.vo.enums.LoginStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class AppUserVO implements Serializable {
     private AuditVO audit;
     private Set<RoleVO> roles = new HashSet<>();
     private boolean isEnabled;
+    private LoginStatusEnum loginStatusEnum;
     private boolean isCredentialsNonExpired;
     private boolean isAccountNonLocked;
     private boolean isAccountNonExpired;
