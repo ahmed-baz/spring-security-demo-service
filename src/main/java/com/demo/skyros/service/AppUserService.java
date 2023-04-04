@@ -161,7 +161,7 @@ public class AppUserService {
         return prepareAppResponse(null, "user deleted");
     }
 
-    @Cacheable(value = "findUserByEmailOrUserName", key = "#key")
+    //@Cacheable(value = "findUserByEmailOrUserName", key = "#key")
     public AppResponse findByEmailOrUserName(String key) {
         AppUser appUser = getUserRepo().findByEmailOrUserName(key, key);
         if (null == appUser) {

@@ -1,8 +1,6 @@
 package com.demo.skyros.exception;
 
-import com.demo.skyros.security.exception.ForceChangePasswordException;
-import com.demo.skyros.security.exception.OtpRequiredException;
-import com.demo.skyros.security.exception.TokenExpiredException;
+import com.demo.skyros.security.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +32,8 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
         return responseEntity;
     }
 
-    @ExceptionHandler(TokenExpiredException.class)
-    public ResponseEntity<Object> handleTokenExpiredException(TokenExpiredException ex, WebRequest request) {
+    @ExceptionHandler({TokenExpiredException.class, InvalidOtpException.class})
+    public ResponseEntity<Object> handleTokenExpiredException(InvalidTokenException ex, WebRequest request) {
         AppResponse appResponse = new AppResponse(new Date(), HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getDescription(false));
         ResponseEntity responseEntity = new ResponseEntity(appResponse, HttpStatus.UNAUTHORIZED);
         return responseEntity;

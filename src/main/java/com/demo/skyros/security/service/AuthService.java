@@ -18,6 +18,7 @@ import com.demo.skyros.security.vo.AppUserDetails;
 import com.demo.skyros.security.vo.LoginRequestVO;
 import com.demo.skyros.security.vo.TokenVO;
 import com.demo.skyros.security.vo.enums.LoginStatusEnum;
+import com.demo.skyros.security.vo.enums.OTPTypeEnum;
 import com.demo.skyros.service.AppRoleService;
 import com.demo.skyros.service.AppUserService;
 import com.demo.skyros.util.AppUtil;
@@ -75,7 +76,7 @@ public class AuthService implements UserDetailsService {
     @Autowired
     private AppUtil appUtil;
 
-    @Cacheable(value = "loadUserByUsername", key = "#username")
+    //@Cacheable(value = "loadUserByUsername", key = "#username")
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppResponse appResponse = getAppUserService().findByEmailOrUserName(username);
@@ -92,6 +93,11 @@ public class AuthService implements UserDetailsService {
         return grantedAuthorityList;
     }
 
+    public AppResponse activateAccount(LoginRequestVO requestVO) {
+        getAppUtil().validateUserOTP(requestVO);
+        return prepareAppResponse(null, "account activated successfully");
+    }
+
     public TokenVO login(LoginRequestVO requestVO) {
         String userName = requestVO.getUserName();
         Authentication authentication = getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(userName, requestVO.getPassword()));
@@ -104,6 +110,8 @@ public class AuthService implements UserDetailsService {
                 responseVO = generateUserTokens(userName, appUserDetails.getId());
                 break;
             case PENDING:
+                String otp = getAppUtil().generateUserOTP(appUserDetails.getUsername(), OTPTypeEnum.REGISTER_ACTIVATION);
+                sendOTP(appUserDetails.getUsername(), otp);
                 throw new OtpRequiredException("OTP Required");
             case FORCE_CHANGE_PASSWORD:
                 throw new ForceChangePasswordException("must change your password");
@@ -143,12 +151,6 @@ public class AuthService implements UserDetailsService {
 
         //8. map entity into vo
         AppUserVO appUserVO = getUserMapper().entityToVO(savedUser);
-
-        //9. generate OTP
-        //String otp = getAppUtil().generateUserOTP(userVO.getEmail(), OTPTypeEnum.REGISTER_ACTIVATION);
-
-        //10. send OTP
-        //sendOTP(appUserVO.getEmail(), otp);
 
         return prepareAppResponse(appUserVO, null);
     }

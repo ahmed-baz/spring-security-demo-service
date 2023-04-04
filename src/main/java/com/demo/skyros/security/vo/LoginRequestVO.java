@@ -14,6 +14,7 @@ public class LoginRequestVO {
 
     private String userName;
     private String password;
+    private String otp;
 
 }
 

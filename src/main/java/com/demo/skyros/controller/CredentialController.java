@@ -22,17 +22,22 @@ public class CredentialController {
     private AuthService authService;
 
     @PostMapping("login")
-    TokenVO login(@RequestBody LoginRequestVO requestVO) {
+    public TokenVO login(@RequestBody LoginRequestVO requestVO) {
         return getAuthService().login(requestVO);
     }
 
+    @PostMapping("activate-account")
+    AppResponse activateAccount(@RequestBody LoginRequestVO requestVO) {
+        return getAuthService().activateAccount(requestVO);
+    }
+
     @PostMapping("refresh")
-    TokenVO refreshAccessToken(@RequestBody TokenVO tokenVO) {
+    public TokenVO refreshAccessToken(@RequestBody TokenVO tokenVO) {
         return getAuthService().refreshAccessToken(tokenVO);
     }
 
     @PostMapping("register")
-    AppResponse addUser(@RequestBody AppUserVO userVO) {
+    public AppResponse addUser(@RequestBody AppUserVO userVO) {
         return getAuthService().register(userVO);
     }
 
