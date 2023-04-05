@@ -4,12 +4,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
-public class InvalidTokenException extends RuntimeException {
+public class UnauthorizedUserException extends RuntimeException {
 
-    public InvalidTokenException() {
+    public UnauthorizedUserException() {
     }
 
-    public InvalidTokenException(String message) {
+    public UnauthorizedUserException(String message) {
         super(message);
     }
 }

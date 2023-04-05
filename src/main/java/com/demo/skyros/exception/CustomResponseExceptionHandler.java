@@ -32,8 +32,8 @@ public class CustomResponseExceptionHandler extends ResponseEntityExceptionHandl
         return responseEntity;
     }
 
-    @ExceptionHandler({TokenExpiredException.class, InvalidOtpException.class})
-    public ResponseEntity<Object> handleTokenExpiredException(InvalidTokenException ex, WebRequest request) {
+    @ExceptionHandler({TokenExpiredException.class, InvalidOtpException.class, InvalidCredentialsException.class})
+    public ResponseEntity<Object> handleTokenExpiredException(UnauthorizedUserException ex, WebRequest request) {
         AppResponse appResponse = new AppResponse(new Date(), HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getDescription(false));
         ResponseEntity responseEntity = new ResponseEntity(appResponse, HttpStatus.UNAUTHORIZED);
         return responseEntity;

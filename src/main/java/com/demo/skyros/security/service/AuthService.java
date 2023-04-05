@@ -2,6 +2,7 @@ package com.demo.skyros.security.service;
 
 
 import com.demo.skyros.exception.AppResponse;
+import com.demo.skyros.exception.UserNotFoundException;
 import com.demo.skyros.mapper.AppUserMapper;
 import com.demo.skyros.model.AppUser;
 import com.demo.skyros.model.EntityAudit;
@@ -10,6 +11,7 @@ import com.demo.skyros.model.UserRole;
 import com.demo.skyros.repo.AppUserRepo;
 import com.demo.skyros.repo.UserRoleRepo;
 import com.demo.skyros.security.exception.ForceChangePasswordException;
+import com.demo.skyros.security.exception.InvalidCredentialsException;
 import com.demo.skyros.security.exception.OtpRequiredException;
 import com.demo.skyros.security.exception.TokenExpiredException;
 import com.demo.skyros.security.model.TokenInfo;
@@ -27,11 +29,11 @@ import com.demo.skyros.vo.RoleVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -100,7 +102,7 @@ public class AuthService implements UserDetailsService {
 
     public TokenVO login(LoginRequestVO requestVO) {
         String userName = requestVO.getUserName();
-        Authentication authentication = getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(userName, requestVO.getPassword()));
+        Authentication authentication = authenticateUser(requestVO);
         AppUserDetails appUserDetails = (AppUserDetails) authentication.getPrincipal();
         LoginStatusEnum loginStatusEnum = appUserDetails.getLoginStatusEnum();
         TokenVO responseVO = new TokenVO();
@@ -117,6 +119,18 @@ public class AuthService implements UserDetailsService {
                 throw new ForceChangePasswordException("must change your password");
         }
         return responseVO;
+    }
+
+    private Authentication authenticateUser(LoginRequestVO requestVO) {
+        try {
+            return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(requestVO.getUserName(), requestVO.getPassword()));
+        } catch (InternalAuthenticationServiceException | UserNotFoundException ex) {
+            log.error(ex);
+            throw new InvalidCredentialsException("invalid username or password");
+        } catch (Exception ex) {
+            log.error(ex);
+            throw ex;
+        }
     }
 
     public AppResponse register(AppUserVO userVO) {
