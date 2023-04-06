@@ -26,6 +26,11 @@ public class CredentialController {
         return getAuthService().login(requestVO);
     }
 
+    @PostMapping("validate-token")
+    public AppResponse validateToken(@RequestBody TokenVO tokenVO) {
+        return getAuthService().validateToken(tokenVO);
+    }
+
     @PostMapping("activate-account")
     AppResponse activateAccount(@RequestBody LoginRequestVO requestVO) {
         return getAuthService().activateAccount(requestVO);

@@ -21,9 +21,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final String[] PUBLIC_ENDPOINTS = {
+            "/login/**",
             "/auth/login/**",
             "/auth/register/**",
             "/auth/refresh/**",
+            "/auth/validate-token/**",
             "/auth/activate-account/**",
             "/auth/login", "/v2/api-docs",
             "/configuration/ui", "/swagger-resources",

@@ -100,6 +100,16 @@ public class AuthService implements UserDetailsService {
         return prepareAppResponse(null, "account activated successfully");
     }
 
+    public AppResponse validateToken(TokenVO tokenVO) {
+        try {
+            String accessToken = tokenVO.getAccessToken();
+            boolean validateToken = getJwtTokenUtil().validateToken(accessToken);
+            return prepareAppResponse(validateToken, null);
+        } catch (Exception ex) {
+            return prepareAppResponse(false, null);
+        }
+    }
+
     public TokenVO login(LoginRequestVO requestVO) {
         String userName = requestVO.getUserName();
         Authentication authentication = authenticateUser(requestVO);
